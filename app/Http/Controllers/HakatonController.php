@@ -6,23 +6,29 @@ use App\Http\Requests\Hakaton\HakatonRequest;
 use App\Http\Resources\HakatonResource;
 use App\Models\Hakaton;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 
-class HakatonController
+
+class HakatonController extends Controller
 {
-    /**
-     *
-     *
-     *
-     * @return JsonResponse
-     */
-    public function allevents(): JsonResponse
-    {
-        /** @var Hakaton $Hakaton */
-        $Hakaton= Hakaton::all();
 
-        return $this->returnResponseJson($Hakaton, 200);
+    public function index(): JsonResponse
+    {
+        return response()->json(HakatonResource::collection(Hakaton::all()));
     }
+
+    public function user(int $userid): JsonResponse
+    {
+        return response()->json(HakatonResource::collection(Hakaton::all()->where('Owner',$userid)));
+    }
+    public function show(int $id): JsonResponse
+    {
+        $hakaton = Hakaton::find($id);
+        if(!$hakaton){
+            return response()->json([], 404);
+        }
+        return $this->returnResponseJson($hakaton, 200);
+    }
+
     /**
      *
      *
@@ -54,7 +60,7 @@ class HakatonController
      */
     public function update(HakatonRequest $request, int $id): JsonResponse
     {
-        /** @var Hakaton $Hakaton */
+        /** @var Hakaton $Hahaton */
 
         $hahaton = Hakaton::find($id);
         if(!$hahaton){
@@ -80,18 +86,19 @@ class HakatonController
      *
      *
      * @param HakatonRequest $request
-     * @return Response
+     * @return JsonResponse
      */
-    public function delete(HakatonRequest $request, int $id): Response
+    public function delete(HakatonRequest $request, int $id): JsonResponse
     {
         /** @var Hakaton $Hakaton */
 
         $hahaton = Hakaton::find($id);
 
         if($hahaton->Owner === $request->user()->id) {
-            $hahaton->delete([]);
-            return response()->noContent();
+            $hahaton->delete();
+            return response()->json([], 204);
         }
+        return response()->json([],403);
     }
     /**
      *
