@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Command extends Model
 {
     protected $guarded = false;
-    public function Owner(): BelongsTo
+    public function owner(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'id');
+        return $this->belongsTo(User::class, 'Owner');
     }
 }

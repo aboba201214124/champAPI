@@ -18,7 +18,7 @@ class CommandResource extends JsonResource
             'id'=>$this->id,
             'name'=>$this->name,
             'code'=>$this->code,
-            'Owner'=>$this->Owner,
+            'Owner'=>new UserResource($this->owner),
             'teammate'=>$this->teammate,
         ];
     }
